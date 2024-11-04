@@ -151,7 +151,8 @@
 ### 2.4 Decorator Pattern
 #### 2.4.1 Function and Method Decorators
 
-  - ```python
+  - 
+    ```python
     @float_args_and_return
     def mean(first, second, *rest):
     	numbers = (first, second) + rest
@@ -165,13 +166,6 @@
     ```
     ```python
     def float_args_and_return(function):
-    	def wrapper(*args, **kwargs):
-    		args = [float(arg) for arg in args]
-    		return float(function(*args, **kwargs))
-    	return wrapper
-    ```
-    ```python
-    def float_args_and_return(function):
     	@functools.wraps(function)
     	def wrapper(*args, **kwargs):
     		args = [float(arg) for arg in args]
@@ -179,7 +173,8 @@
     	return wrapper
     ```
 
-  - ```python
+  - 
+    ```python
     @statically_typed(str, str, return_type=str)
     def make_tagged(text, tag):
     	return "<{0}>{1}</{0}>".format(tag, escape(text))
@@ -211,7 +206,8 @@
     	return decorator
     ```
 
-  - ```python
+  - 
+    ```python
     @application.post("/mailinglists/add")
     @Web.ensure_logged_in
     def person_add_submit(username):
