@@ -263,9 +263,9 @@
         ...
     ```
 
-  - @see mediator1.py
+  - @see 3_5-Mediator_Pattern/mediator1.py
   - @see mediator1d.py
-  - @see mediator2.py
+  - @see 3_5-Mediator_Pattern/mediator2.py
   - @see mediator2d.py
 
 ### 2.5 Façade Pattern
@@ -375,8 +375,8 @@
     ```python
     def update(localContext, result, current):
         localContext[current.letter] = result
-        current.letter =chr(ord(current.letter) +1)
-        if current.letter >"Z": # We only support 26 variables
+        current.letter = chr(ord(current.letter) +1)
+        if current.letter > "Z": # We only support 26 variables
             current.letter = "A"
     ```
 
@@ -446,8 +446,10 @@
 ### 3.5 Mediator Pattern
 #### 3.5.1 A Conventional Mediator
   - @see mediator1.py
+  - @see 2_4-Decorator_Pattern/mediator1d.py
 #### 3.5.2 A Coroutine-based Mediator
   - @see mediator2.py
+  - @see 2_4-Decorator_Pattern/mediator2d.py
 
 ### 3.6 Memento Pattern
   - @use pickle
