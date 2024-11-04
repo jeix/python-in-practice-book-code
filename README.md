@@ -12,6 +12,60 @@
 #### 1.1.2 A More Pythonic Abstract Factory
   - @see diagram2.py
 
+  - ```python
+    txtDiagram = create_diagram(DiagramFactory)
+    txtDiagram.save(textFilename)
+    
+    svgDiagram = create_diagram(SvgDiagramFactory)
+    svgDiagram.save(svgFilename)
+    ```
+    ```python
+    def create_diagram(factory):
+    	diagram = factory.make_diagram(30, 7)
+    	rectangle = factory.make_rectangle(4, 1, 22, 5, "yellow")
+    	text = factory.make_text(7, 3, "Abstract Factory")
+    	diagram.add(rectangle)
+    	diagram.add(text)
+    	return diagram
+    ```
+    ```python
+    class DiagramFactory:
+    
+    	@classmethod
+    	def make_diagram(Class, width, height):
+    		return Class.Diagram(width, height)
+    
+    	@classmethod
+    	def make_rectangle(Class, x, y, width, height, fill="white",
+    			stroke="black"):
+    		return Class.Rectangle(x, y, width, height, fill, stroke)
+    
+    	@classmethod
+    	def make_text(Class, x, y, text, fontsize=12):
+    		return Class.Text(x, y, text, fontsize)
+    
+    	class Diagram:
+    		...
+    
+    	class Rectangle:
+    		...
+    
+    	class Text:
+    		...
+    ```
+    ```python
+    class SvgDiagramFactory(DiagramFactory):
+    
+    	class Diagram:
+    		...
+    
+    	class Rectangle:
+    		...
+    
+    	class Text:
+    		...
+    ```
+
 ### 1.2 Builder Pattern
   - @see formbuilder.py
 
@@ -76,6 +130,11 @@
     		Base.__subclasshook__ = classmethod(__subclasshook__)
     		return Base
     	return decorator
+    ```
+
+  - ```python
+    @Qtrac.has_methods("initialize", "draw_caption", "draw_bar", "finalize")
+    class BarRenderer(metaclass=abc.ABCMeta): pass
     ```
 
   - ```python
