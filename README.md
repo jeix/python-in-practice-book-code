@@ -80,7 +80,7 @@
   - ```python
     class Point:
         
-      __slots__ = ("x", "y")
+        __slots__ = ("x", "y")
         
         def __init__(self, x, y):
             self.x = x
@@ -245,6 +245,9 @@
         def on_change(self):
             if self.mediator is not None:
                 self.mediator.on_change(self)
+    
+    class Button(Mediated):
+        ...
     ```
     ```python
     def mediated(Class):
@@ -254,9 +257,15 @@
                 self.mediator.on_change(self)
         setattr(Class,"on_change", on_change)
         return Class
+    
+    @mediated
+    class Button:
+        ...
     ```
 
+  - @see mediator1.py
   - @see mediator1d.py
+  - @see mediator2.py
   - @see mediator2d.py
 
 ### 2.5 Façade Pattern
