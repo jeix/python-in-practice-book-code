@@ -21,49 +21,49 @@
     ```
     ```python
     def create_diagram(factory):
-    	diagram = factory.make_diagram(30, 7)
-    	rectangle = factory.make_rectangle(4, 1, 22, 5, "yellow")
-    	text = factory.make_text(7, 3, "Abstract Factory")
-    	diagram.add(rectangle)
-    	diagram.add(text)
-    	return diagram
+        diagram = factory.make_diagram(30, 7)
+        rectangle = factory.make_rectangle(4, 1, 22, 5, "yellow")
+        text = factory.make_text(7, 3, "Abstract Factory")
+        diagram.add(rectangle)
+        diagram.add(text)
+        return diagram
     ```
     ```python
     class DiagramFactory:
     
-    	@classmethod
-    	def make_diagram(Class, width, height):
-    		return Class.Diagram(width, height)
+        @classmethod
+        def make_diagram(Class, width, height):
+            return Class.Diagram(width, height)
     
-    	@classmethod
-    	def make_rectangle(Class, x, y, width, height, fill="white",
-    			stroke="black"):
-    		return Class.Rectangle(x, y, width, height, fill, stroke)
+        @classmethod
+        def make_rectangle(Class, x, y, width, height, fill="white",
+                stroke="black"):
+            return Class.Rectangle(x, y, width, height, fill, stroke)
     
-    	@classmethod
-    	def make_text(Class, x, y, text, fontsize=12):
-    		return Class.Text(x, y, text, fontsize)
+        @classmethod
+        def make_text(Class, x, y, text, fontsize=12):
+            return Class.Text(x, y, text, fontsize)
     
-    	class Diagram:
-    		...
+        class Diagram:
+            ...
     
-    	class Rectangle:
-    		...
+        class Rectangle:
+            ...
     
-    	class Text:
-    		...
+        class Text:
+            ...
     ```
     ```python
     class SvgDiagramFactory(DiagramFactory):
     
-    	class Diagram:
-    		...
+        class Diagram:
+            ...
     
-    	class Rectangle:
-    		...
+        class Rectangle:
+            ...
     
-    	class Text:
-    		...
+        class Text:
+            ...
     ```
 
 ### 1.2 Builder Pattern
@@ -79,16 +79,16 @@
 
   - ```python
     class Point:
-    	
-  	__slots__ = ("x", "y")
-    	
-    	def __init__(self, x, y):
-    		self.x = x
-    		self.y = y
+        
+      __slots__ = ("x", "y")
+        
+        def __init__(self, x, y):
+            self.x = x
+            self.y = y
     ```
     ```python
     def make_object(Class, *args, **kwargs):
-    	return Class(*args, **kwargs)
+        return Class(*args, **kwargs)
     
     point1 = Point(1, 2)
     point2 = eval("{}({}, {})".format("Point", 2, 4)) # Risky
@@ -119,17 +119,17 @@
   - ```python
     # Qtrac.has_methods
     def has_methods(*methods):
-    	def decorator(Base):
-    		def __subclasshook__(Class, Subclass):
-    			if ClassisBase:
-    				attributes = collections.ChainMap(*(Superclass.__dict__
-    						for Superclass in Subclass.__mro__))
-    				if all(method in attributes for method in methods):
-    					return True
-    			return NotImplemented
-    		Base.__subclasshook__ = classmethod(__subclasshook__)
-    		return Base
-    	return decorator
+        def decorator(Base):
+            def __subclasshook__(Class, Subclass):
+                if ClassisBase:
+                    attributes = collections.ChainMap(*(Superclass.__dict__
+                            for Superclass in Subclass.__mro__))
+                    if all(method in attributes for method in methods):
+                        return True
+                return NotImplemented
+            Base.__subclasshook__ = classmethod(__subclasshook__)
+            return Base
+        return decorator
     ```
     ```python
     @Qtrac.has_methods("initialize", "draw_caption", "draw_bar", "finalize")
@@ -137,7 +137,7 @@
     ```
     ```python
     class BarRenderer(Qtrac.Requirer):
-    	required_methods = {"initialize", "draw_caption", "draw_bar", "finalize"}
+        required_methods = {"initialize", "draw_caption", "draw_bar", "finalize"}
     ```
 
 ### 2.3 Composite Pattern
@@ -153,55 +153,55 @@
     ```python
     @float_args_and_return
     def mean(first, second, *rest):
-    	numbers = (first, second) + rest
-    	return sum(numbers) / len(numbers)
+        numbers = (first, second) + rest
+        return sum(numbers) / len(numbers)
     ```
     ```python
     def mean(first, second, *rest):
-    	numbers = (first, second) + rest
-    	return sum(numbers) / len(numbers)
+        numbers = (first, second) + rest
+        return sum(numbers) / len(numbers)
     mean = float_args_and_return(mean)
     ```
     ```python
     def float_args_and_return(function):
-    	@functools.wraps(function)
-    	def wrapper(*args, **kwargs):
-    		args = [float(arg) for arg in args]
-    		return float(function(*args, **kwargs))
-    	return wrapper
+        @functools.wraps(function)
+        def wrapper(*args, **kwargs):
+            args = [float(arg) for arg in args]
+            return float(function(*args, **kwargs))
+        return wrapper
     ```
 
   - (2)
     ```python
     @statically_typed(str, str, return_type=str)
     def make_tagged(text, tag):
-    	return "<{0}>{1}</{0}>".format(tag, escape(text))
+        return "<{0}>{1}</{0}>".format(tag, escape(text))
     
     @statically_typed(str, int, str) # Will accept any return type
     def repeat(what, count, separator):
-    	return ((what + separator) * count)[:-len(separator)]
+        return ((what + separator) * count)[:-len(separator)]
     ```
     ```python
     def statically_typed(*types, return_type=None):
-    	def decorator(function):
-    		@functools.wraps(function)
-    		def wrapper(*args, **kwargs):
-    			if len(args) > len(types):
-    				raise ValueError("too many arguments")
-    			elif len(args) < len(types):
-    				raise ValueError("too few arguments")
-    			for i, (arg, type_) in enumerate(zip(args, types)):
-    				if not isinstance(arg, type_):
-    					raise ValueError("argument {} must be of type {}"
-    							.format(i, type_.__name__))
-    			result = function(*args, **kwargs)
-    			if (return_type is not None and
-    				not isinstance(result, return_type)):
-    				raise ValueError("return value must be of type {}".format(
-    						return_type.__name__))
-    			return result
-    		return wrapper
-    	return decorator
+        def decorator(function):
+            @functools.wraps(function)
+            def wrapper(*args, **kwargs):
+                if len(args) > len(types):
+                    raise ValueError("too many arguments")
+                elif len(args) < len(types):
+                    raise ValueError("too few arguments")
+                for i, (arg, type_) in enumerate(zip(args, types)):
+                    if not isinstance(arg, type_):
+                        raise ValueError("argument {} must be of type {}"
+                                .format(i, type_.__name__))
+                result = function(*args, **kwargs)
+                if (return_type is not None and
+                    not isinstance(result, return_type)):
+                    raise ValueError("return value must be of type {}".format(
+                            return_type.__name__))
+                return result
+            return wrapper
+        return decorator
     ```
 
   - (3)
@@ -209,25 +209,25 @@
     @application.post("/mailinglists/add")
     @Web.ensure_logged_in
     def person_add_submit(username):
-    	name = bottle.request.forms.get("name")
-    	try:
-    		id = Data.MailingLists.add(name)
-    		bottle.redirect("/mailinglists/view")
-    	except Data.Sql.Error as err:
-    		return bottle.mako_template("error", url="/mailinglists/add",
-    				text="Add Mailinglist", message=str(err))
+        name = bottle.request.forms.get("name")
+        try:
+            id = Data.MailingLists.add(name)
+            bottle.redirect("/mailinglists/view")
+        except Data.Sql.Error as err:
+            return bottle.mako_template("error", url="/mailinglists/add",
+                    text="Add Mailinglist", message=str(err))
     ```
     ```python
     def ensure_logged_in(function):
-    	@functools.wraps(function)
-    	def wrapper(*args, **kwargs):
-    		username = bottle.request.get_cookie(COOKIE,
-    				secret=secret(bottle.request))
-    		if username is not None:
-    			kwargs["username"] = username
-    			return function(*args, **kwargs)
-    		bottle.redirect("/login")
-    	return wrapper
+        @functools.wraps(function)
+        def wrapper(*args, **kwargs):
+            username = bottle.request.get_cookie(COOKIE,
+                    secret=secret(bottle.request))
+            if username is not None:
+                kwargs["username"] = username
+                return function(*args, **kwargs)
+            bottle.redirect("/login")
+        return wrapper
     ```
 
 #### 2.4.2 Class Decorators
@@ -239,21 +239,21 @@
   - ```python
     class Mediated:
     
-    	def __init__(self):
-    			self.mediator = None
+        def __init__(self):
+            self.mediator = None
     
-    	def on_change(self):
-    		if self.mediator is not None:
-    			self.mediator.on_change(self)
+        def on_change(self):
+            if self.mediator is not None:
+                self.mediator.on_change(self)
     ```
     ```python
     def mediated(Class):
-    	setattr(Class, "mediator", None)
-    	def on_change(self):
-    		if self.mediatoris not None:
-    			self.mediator.on_change(self)
-    	setattr(Class,"on_change", on_change)
-    	return Class
+        setattr(Class, "mediator", None)
+        def on_change(self):
+            if self.mediatoris not None:
+                self.mediator.on_change(self)
+        setattr(Class,"on_change", on_change)
+        return Class
     ```
 
   - @see mediator1d.py
@@ -280,12 +280,12 @@
 
   - ```python
     def coroutine(function):
-    	@functools.wraps(function)
-    	def wrapper(*args, **kwargs):
-    		generator = function(*args, **kwargs)
-    		next(generator)
-    		return generator
-    	return wrapper
+        @functools.wraps(function)
+        def wrapper(*args, **kwargs):
+            generator = function(*args, **kwargs)
+            next(generator)
+            return generator
+        return wrapper
     ```
 
   - @see eventhandler2.py
@@ -299,10 +299,10 @@
 
   - ```python
     try:
-    	count = int(userCount)
-    	when = datetime.datetime.strptime(userDate, "%Y/%m/%d").date()
+        count = int(userCount)
+        when = datetime.datetime.strptime(userDate, "%Y/%m/%d").date()
     except ValueError as err:
-    	print(err)
+        print(err)
     ```
 
   - PLY (Python Lex-Yacc) @ http://www.dabeaz.com/ply/
@@ -327,48 +327,48 @@
     ```
     ```python
     def main():
-    	quit = "Ctrl+Z,Enter" if sys.platform.startswith("win") else "Ctrl+D"
-    	prompt = "Enter an expression ({} to quit): ".format(quit)
-    	#current = ["A"]
-    	#current = type("_", (), dict(letter="A"))()
-    	current = types.SimpleNamespace(letter="A")
-    	globalContext = global_context()
-    	localContext = collections.OrderedDict()
-    	while True:
-    		try:
-    			expression = input(prompt)
-    			if expression:
-    				calculate(expression, globalContext, localContext, current)
-    		except EOFError:
-    			print()
-    			break
+        quit = "Ctrl+Z,Enter" if sys.platform.startswith("win") else "Ctrl+D"
+        prompt = "Enter an expression ({} to quit): ".format(quit)
+        #current = ["A"]
+        #current = type("_", (), dict(letter="A"))()
+        current = types.SimpleNamespace(letter="A")
+        globalContext = global_context()
+        localContext = collections.OrderedDict()
+        while True:
+            try:
+                expression = input(prompt)
+                if expression:
+                    calculate(expression, globalContext, localContext, current)
+            except EOFError:
+                print()
+                break
     ```
     ```python
     import math
     def global_context():
-    	globalContext = globals().copy()
-    	for name in dir(math):
-    		if not name.startswith("_"):
-    			globalContext[name] = getattr(math, name)
-    	return globalContext
+        globalContext = globals().copy()
+        for name in dir(math):
+            if not name.startswith("_"):
+                globalContext[name] = getattr(math, name)
+        return globalContext
     ```
     ```python
     def calculate(expression, globalContext, localContext, current):
-    	try:
-    		result = eval(expression, globalContext, localContext)
-    		update(localContext, result, current)
-    		print(", ".join(["{}={}".format(variable, value)
-    				for variable, value in localContext.items()]))
-    		print("ANS={}".format(result))
-    	except Exception as err:
-    		print(err)
+        try:
+            result = eval(expression, globalContext, localContext)
+            update(localContext, result, current)
+            print(", ".join(["{}={}".format(variable, value)
+                    for variable, value in localContext.items()]))
+            print("ANS={}".format(result))
+        except Exception as err:
+            print(err)
     ```
     ```python
     def update(localContext, result, current):
-    	localContext[current.letter] = result
-    	current.letter =chr(ord(current.letter) +1)
-    	if current.letter >"Z": # We only support 26 variables
-    		current.letter = "A"
+        localContext[current.letter] = result
+        current.letter =chr(ord(current.letter) +1)
+        if current.letter >"Z": # We only support 26 variables
+            current.letter = "A"
     ```
 
 #### 3.3.2 Code Evaluation with exec()
@@ -382,19 +382,19 @@
 
   - ```python
     for letter in AtoZ():
-    	print(letter, end="")
+        print(letter, end="")
     print()
     
     for letter in iter(AtoZ()):
-    	print(letter, end="")
+        print(letter, end="")
     print()
     ```
     ```python
     class AtoZ:
-    	def __getitem__(self, index):
-    		if 0 <= index < 26:
-    			return chr(index + ord("A"))
-    		raise IndexError()
+        def __getitem__(self, index):
+            if 0 <= index < 26:
+                return chr(index + ord("A"))
+            raise IndexError()
     ```
 
 #### 3.4.2 Two-argument iter() Function Iterators
@@ -402,30 +402,30 @@
   - ```python
     # stop if the callable raises a StopIteration exception
     for president in iter(Presidents("George Bush"), None):
-    	print(president, end=" * ")
+        print(president, end=" * ")
     print()
     
     # stop if it returns the sentinel value
     for president in iter(Presidents("George Bush"), "George W. Bush"):
-    	print(president, end=" * ")
+        print(president, end=" * ")
     print()
     ```
     ```python
     class Presidents:
     
-    	__names = ("George Washington", "John Adams", "Thomas Jefferson",
-    				...
-    				"Bill Clinton", "George W. Bush", "Barack Obama")
+        __names = ("George Washington", "John Adams", "Thomas Jefferson",
+                    ...
+                    "Bill Clinton", "George W. Bush", "Barack Obama")
     
-    	def __init__(self, first=None):
-    		self.index = (-1 if first is None else
-    						Presidents.__names.index(first) - 1)
+        def __init__(self, first=None):
+            self.index = (-1 if first is None else
+                            Presidents.__names.index(first) - 1)
     
-    	def __call__(self):
-    		self.index += 1
-    		if self.index < len(Presidents.__names):
-    			return Presidents.__names[self.index]
-    		raise StopIteration()
+        def __call__(self):
+            self.index += 1
+            if self.index < len(Presidents.__names):
+                return Presidents.__names[self.index]
+            raise StopIteration()
     ```
 
 #### 3.4.3 Iterator Protocol Iterators
@@ -473,7 +473,7 @@
     ```
     ```python
     for item in collection:
-    	function(item)
+        function(item)
     ```
 
 ### 3.12 Case Study: An Image Package
@@ -482,13 +482,13 @@
   - ```python
     _Modules = []
     for name in os.listdir(os.path.dirname(__file__)):
-    	if not name.startswith("_") and name.endswith(".py"):
-    		name = "." + os.path.splitext(name)[0]
-    		try:
-    			module = importlib.import_module(name, "Image")
-    			_Modules.append(module)
-    		except ImportError as err:
-    			warnings.warn("failed to load Image module: {}".format(err))
+        if not name.startswith("_") and name.endswith(".py"):
+            name = "." + os.path.splitext(name)[0]
+            try:
+                module = importlib.import_module(name, "Image")
+                _Modules.append(module)
+            except ImportError as err:
+                warnings.warn("failed to load Image module: {}".format(err))
     del name, module
     ```
 
