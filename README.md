@@ -131,13 +131,11 @@
     		return Base
     	return decorator
     ```
-
-  - ```python
+    ```python
     @Qtrac.has_methods("initialize", "draw_caption", "draw_bar", "finalize")
     class BarRenderer(metaclass=abc.ABCMeta): pass
     ```
-
-  - ```python
+    ```python
     class BarRenderer(Qtrac.Requirer):
     	required_methods = {"initialize", "draw_caption", "draw_bar", "finalize"}
     ```
@@ -151,7 +149,7 @@
 ### 2.4 Decorator Pattern
 #### 2.4.1 Function and Method Decorators
 
-  - 
+  - (1)
     ```python
     @float_args_and_return
     def mean(first, second, *rest):
@@ -173,7 +171,7 @@
     	return wrapper
     ```
 
-  - 
+  - (2)
     ```python
     @statically_typed(str, str, return_type=str)
     def make_tagged(text, tag):
@@ -206,7 +204,7 @@
     	return decorator
     ```
 
-  - 
+  - (3)
     ```python
     @application.post("/mailinglists/add")
     @Web.ensure_logged_in
