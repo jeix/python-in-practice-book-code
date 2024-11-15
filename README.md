@@ -121,7 +121,7 @@
     def has_methods(*methods):
         def decorator(Base):
             def __subclasshook__(Class, Subclass):
-                if ClassisBase:
+                if Class is Base:
                     attributes = collections.ChainMap(*(Superclass.__dict__
                             for Superclass in Subclass.__mro__))
                     if all(method in attributes for method in methods):
@@ -253,7 +253,7 @@
     def mediated(Class):
         setattr(Class, "mediator", None)
         def on_change(self):
-            if self.mediatoris not None:
+            if self.mediator is not None:
                 self.mediator.on_change(self)
         setattr(Class,"on_change", on_change)
         return Class
